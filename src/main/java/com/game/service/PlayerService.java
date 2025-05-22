@@ -28,6 +28,7 @@ public class PlayerService {
     }
 
     public Integer getAllCount() {
+
         return playerRepository.getAllCount();
     }
 
