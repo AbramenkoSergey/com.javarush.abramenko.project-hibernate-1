@@ -11,6 +11,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 //import javax.annotation.PreDestroy;
+import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -34,8 +35,6 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @Override
     public List<Player> getAll(int pageNumber, int pageSize) {
-        //List<Player> players;
-        System.out.println("iam here");
         try (Session session = sessionFactory.openSession()) {
             NativeQuery<Player> nativeQuery = session.createNativeQuery(
                     "SELECT * FROM rpg.player ORDER BY id LIMIT :pageSize OFFSET :ofSet",
@@ -46,7 +45,7 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
             return  nativeQuery.getResultList();
         }
-        //return players;
+
     }
 
     @Override
@@ -77,24 +76,56 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @Override
     public Player update(Player player) {
-        return null;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
+            session.update(player);
+            transaction.commit();
+
+        }catch (Exception e){
+            if(transaction != null){
+                transaction.rollback();
+            }
+            throw new RuntimeException(e);
+        }
+        return player;
     }
 
     @Override
     public Optional<Player> findById(long id) {
-        return Optional.empty();
+        try (Session session = sessionFactory.openSession()){
+            Player player = session.get(Player.class, id);
+            return Optional.ofNullable(player);
+        }catch (Exception e){
+            return Optional.empty();
+        }
+
     }
 
     @Override
     public void delete(Player player) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
+            session.delete(player);
+            transaction.commit();
+        }catch (Exception e){
+            if(transaction != null){
+                transaction.rollback();
+            }
+            throw new RuntimeException(e);
+        }
 
     }
 
-/*    @PreDestroy
-    public void beforeStop() {
-        sessionFactory.close();
+    @PreDestroy
 
-    }*/
+    public void beforeStop() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
+
+    }
 
     private void init(){
         String initSQL= "INSERT INTO rpg.player (name, title, race, profession, birthday, level, banned)\n" +
