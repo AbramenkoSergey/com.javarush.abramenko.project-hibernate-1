@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -56,6 +57,7 @@ class PlayerRepositoryDBTest {
       nativeQuery.setParameter("pageSize", 10);
       nativeQuery.setParameter("offSet", 0);
       List<Player> list = queryMock.list();
+      sessionTest.close();
 
 
       assertEquals(1, list.size());
@@ -63,6 +65,20 @@ class PlayerRepositoryDBTest {
 
     @Test
     void getAllCount() {
+      Integer counter = 40;
+      when(sessionFactoryTest.openSession()).thenReturn(sessionTest);
+      Query<Integer> queryMock = mock(Query.class);
+      when(sessionTest.createQuery("SELECT distinct COUNT(*) FROM Player", Integer.class)).thenReturn(queryMock);
+      when(queryMock.getFirstResult()).thenReturn(counter);
+
+      sessionTest = sessionFactoryTest.openSession();
+      queryMock = sessionTest.createQuery("SELECT distinct COUNT(*) FROM Player", Integer.class);
+      int firstResult = queryMock.getFirstResult();
+
+
+      assertEquals(counter, firstResult);
+
+
     }
 
     @Test

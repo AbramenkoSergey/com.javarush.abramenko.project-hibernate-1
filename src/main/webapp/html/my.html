@@ -3,6 +3,19 @@
     <title>RPG</title>
     <script src=https://code.jquery.com/jquery-3.6.0.min.js></script>
     <link href="/css/my.css" rel="stylesheet">
+
+
+<!--    <title>background_image</title>-->
+    <style>
+        body {
+            background-image: url("/img/logo.jpeg");
+            background-repeat: no-repeat;
+            background-position: bottom right;
+            /*background-size: contain; !*contain или cover  *!*/
+            background-size: 75%;
+            z-index: -1;
+        }
+    </style>
 </head>
 <body onload="showList(0)">
 <h1>RPG admin panel</h1>
@@ -75,7 +88,8 @@
     </div>
     <div class="create__group">
         <label for="input_birthday_new">Birthday:</label>
-        <input class="create__input" type="date" id="input_birthday_new" name="birthday" min="2000-01-01" max="3000-12-31">
+        <input class="create__input" type="date" id="input_birthday_new" name="birthday" min="2000-01-01"
+               max="3000-12-31">
     </div>
     <div class="create__group">
         <label for="input_banned_new">Banned:</label>
@@ -91,7 +105,10 @@
             </button>
         </span>
     </div>
+
+
 </div>
+
 <!--<label for="input_name_new">Name:</label>-->
 <!--<input type="text" id="input_name_new" name="name" required size="12" maxlength="12">-->
 <!--<br>-->
@@ -280,7 +297,13 @@
             dataType: 'json',
             contentType: 'application/json;charset=UTF-8',
             async: false,
-            data: JSON.stringify({"name": value_name, "title": value_title, "race": value_race, "profession": value_profession, "banned": value_banned}),
+            data: JSON.stringify({
+                "name": value_name,
+                "title": value_title,
+                "race": value_race,
+                "profession": value_profession,
+                "banned": value_banned
+            }),
             success: function () {
                 showList(getCurrentPage());
             }
@@ -307,7 +330,15 @@
             dataType: 'json',
             contentType: 'application/json;charset=UTF-8',
             async: false,
-            data: JSON.stringify({"name": value_name, "title": value_title, "race": value_race, "profession": value_profession, "level": value_level, "birthday": datetime, "banned": value_banned}),
+            data: JSON.stringify({
+                "name": value_name,
+                "title": value_title,
+                "race": value_race,
+                "profession": value_profession,
+                "level": value_level,
+                "birthday": datetime,
+                "banned": value_banned
+            }),
             success: function () {
                 $("#input_name_new").val("");
                 $("#input_title_new").val("");
@@ -371,5 +402,8 @@
             + "</select>";
     }
 </script>
+
+
+
 </body>
 </html>
