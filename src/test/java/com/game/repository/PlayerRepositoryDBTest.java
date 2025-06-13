@@ -9,10 +9,13 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -83,21 +86,68 @@ class PlayerRepositoryDBTest {
 
     @Test
     void save() {
+    Player player = new Player();
+      when(sessionFactoryTest.openSession()).thenReturn(sessionTest);
+
+      sessionTest = sessionFactoryTest.openSession();
+      transactionTest = sessionTest.beginTransaction();
+      sessionTest.save(player);
+      transactionTest.commit();
+      sessionTest.close();
+
     }
 
-    @Test
+   @Test
     void update() {
+        Player player = new Player();
+        when(sessionFactoryTest.openSession()).thenReturn(sessionTest);
+        sessionTest = sessionFactoryTest.openSession();
+        transactionTest.begin();
+        sessionTest.update(player);
+        transactionTest.commit();
+        sessionTest.close();
+
     }
 
-    @Test
-    void findById() {
+   @ParameterizedTest
+    @ValueSource(longs = 41)
+    void findById(Long arg) {
+
+      Player player = new Player();
+
+     when(sessionFactoryTest.openSession()).thenReturn(sessionTest);
+     when(sessionTest.get(Player.class, arg)).thenReturn(player);
+
+
+     sessionTest = sessionFactoryTest.openSession();
+     if(sessionTest.get(Player.class, arg) == null)
+     assertEquals(player, sessionTest.get(Player.class, arg));
+     if(sessionTest.get(Player.class, arg) == null){
+         assertEquals(null, sessionTest.get(Player.class, arg));
+     }else{
+         assertEquals(player, sessionTest.get(Player.class, arg));
+     }
+     sessionTest.close();
+
     }
 
     @Test
     void delete() {
+      Player player = new Player();
+      when(sessionFactoryTest.openSession()).thenReturn(sessionTest);
+
+      sessionTest = sessionFactoryTest.openSession();
+      transactionTest = sessionTest.beginTransaction();
+      sessionTest.delete(player);
+      sessionTest.close();
+      transactionTest.commit();
     }
 
     @Test
     void beforeStop() {
+
+        if (sessionFactoryTest != null) {
+            sessionFactoryTest.close();
+        }
     }
 }
