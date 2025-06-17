@@ -31,7 +31,7 @@ class PlayerRepositoryDBTest {
     sessionFactoryTest = mock(SessionFactory.class);
     sessionTest = mock(Session.class);
     transactionTest = mock(Transaction.class);
-    playerRepositoryDBTest =  Mockito.spy(new PlayerRepositoryDB());
+    playerRepositoryDBTest =  mock(PlayerRepositoryDB.class);
 
    // when(sessionFactoryTest.openSession()).thenReturn(sessionTest);
     when(sessionTest.beginTransaction()).thenReturn(transactionTest);
