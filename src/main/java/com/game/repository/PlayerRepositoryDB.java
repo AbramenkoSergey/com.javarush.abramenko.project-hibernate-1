@@ -12,6 +12,10 @@ import org.springframework.stereotype.Repository;
 
 //import javax.annotation.PreDestroy;
 import javax.annotation.PreDestroy;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -24,6 +28,8 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     private final SessionFactory sessionFactory;
 
     public PlayerRepositoryDB() {
+
+
 
         sessionFactory = new Configuration()
                 .addAnnotatedClass(Player.class)
@@ -43,7 +49,7 @@ public class PlayerRepositoryDB implements IPlayerRepository {
             nativeQuery.setParameter("ofSet", pageSize * pageNumber);
 
 
-            return  nativeQuery.getResultList();
+            return nativeQuery.getResultList();
         }
 
     }
@@ -62,12 +68,12 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     @Override
     public Player save(Player player) {
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.persist(player);
             transaction.commit();
-        }catch (Exception e){
-            if(transaction != null){
+        } catch (Exception e) {
+            if (transaction != null) {
                 transaction.rollback();
             }
         }
@@ -77,13 +83,13 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     @Override
     public Player update(Player player) {
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.update(player);
             transaction.commit();
 
-        }catch (Exception e){
-            if(transaction != null){
+        } catch (Exception e) {
+            if (transaction != null) {
                 transaction.rollback();
             }
             throw new RuntimeException(e);
@@ -93,10 +99,10 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @Override
     public Optional<Player> findById(long id) {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             Player player = session.get(Player.class, id);
             return Optional.ofNullable(player);
-        }catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
 
@@ -105,12 +111,12 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     @Override
     public void delete(Player player) {
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.delete(player);
             transaction.commit();
-        }catch (Exception e){
-            if(transaction != null){
+        } catch (Exception e) {
+            if (transaction != null) {
                 transaction.rollback();
             }
             throw new RuntimeException(e);
@@ -127,8 +133,8 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     }
 
-    private void init(){
-        String initSQL= "INSERT INTO rpg.player (name, title, race, profession, birthday, level, banned)\n" +
+    private void init() {
+        String initSQL = "INSERT INTO rpg.player (name, title, race, profession, birthday, level, banned)\n" +
                 "VALUES ('Ниус', 'Приходящий Без Шума', 6, 1, '2009-06-09 00:44:40.000000', 33, false),\n" +
                 "       ('Никрашш', 'НайтВульф', 4, 0, '2006-07-09 08:50:40.000000', 58, false),\n" +
                 "       ('Эззэссэль', 'шипящая', 1, 3, '2009-05-25 00:43:20.000000', 3, true),\n" +
@@ -170,22 +176,21 @@ public class PlayerRepositoryDB implements IPlayerRepository {
                 "       ('Ардонг', 'Вспышк A', 0, 0, '2008-07-31 23:46:00.000000', 21, false),\n" +
                 "       ('Аттирис', 'и.о.Карвандоса', 2, 2, '2009-06-15 10:26:40.000000', 34, true)\n" +
                 ";";
-        if(getAllCount() == 0){
+        if (getAllCount() == 0) {
             Transaction transaction = null;
-            try (Session session = sessionFactory.openSession()){
+            try (Session session = sessionFactory.openSession()) {
                 transaction = session.beginTransaction();
                 NativeQuery nativeQuery = session.createNativeQuery(initSQL);
                 nativeQuery.executeUpdate();
                 transaction.commit();
 
-            }catch (Exception e){
-                if(transaction != null){
+            } catch (Exception e) {
+                if (transaction != null) {
                     transaction.rollback();
                 }
-                throw  new RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
-
-
     }
+
 }

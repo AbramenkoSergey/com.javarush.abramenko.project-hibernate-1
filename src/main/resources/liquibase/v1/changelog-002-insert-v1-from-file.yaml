@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Abramenko Sergey
+      changes:
+        - sqlFile:
+            path: init.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true

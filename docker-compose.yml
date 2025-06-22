@@ -6,12 +6,14 @@ services:
     container_name: rpg-postgres
     environment:
       POSTGRES_DB: rpg_db
+      POSTGRES_SCHEMA: rpg
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
 
   app:
     build: .

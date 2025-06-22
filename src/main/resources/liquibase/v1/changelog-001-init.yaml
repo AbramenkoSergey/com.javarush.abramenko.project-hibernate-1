@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: Abramenko Sergey
+      changes:
+        - sql:
+            comment: Создание схемы, если не существует
+            sql: "CREATE SCHEMA IF NOT EXISTS rpg;"
+  - changeSet:
+      id: 1
+      author: Abramenko Sergey
+      changes:
+        - createTable:
+            tableName: player
+            schemaName: rpg
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(12)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: race
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: profession
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: birthday
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: banned
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: level
+                  type: INT
+                  constraints:
+                    nullable: false
