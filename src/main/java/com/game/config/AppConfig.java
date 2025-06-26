@@ -18,7 +18,6 @@ import java.util.Properties;
 @Configuration
 @ComponentScan("com.game")
 public class AppConfig {
-
     @Bean
     public DataSource dataSource() {
         String dbHost = System.getenv().getOrDefault("DB_HOST", "localhost");
